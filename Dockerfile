@@ -1,6 +1,6 @@
 FROM open-liberty:kernel
 
-LABEL maintainer "Albert Haliulov <ahaliulov@ru.ibm.com>"
+LABEL maintainer "Albert Haliulov <albert.haliulov@gmail.com>"
 
 #COPY --chown=1001:0 src/main/liberty/config/ /config/
 
