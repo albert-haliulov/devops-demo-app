@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: devops-demo-backend-internal
   namespace: demo
+  annotations:
+    prometheus.io/port: "9080"
+    prometheus.io/scrape: "true"
 spec:
   selector:
     app: devops-demo-backend
@@ -10,9 +13,6 @@ spec:
   - name: http
     port: 9080
     targetPort: 9080
-  - name: https
-    port: 9443
-    targetPort: 9443
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -62,10 +62,6 @@ spec:
     app: devops-demo-backend 
   ports:
     - name: http
-      nodePort: 30180
+      nodePort: 30111
       port: 9080 
       targetPort: 9080
-    - name: https
-      nodePort: 30143
-      port: 9443 
-      targetPort: 9443
