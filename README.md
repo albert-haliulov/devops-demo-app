@@ -33,7 +33,7 @@ mvn liberty:run-server
 ## build Docker IMAGE. Don't forget to change `<VERSION_TAG>`
 
 ````
-docker build -t mycluster.icp:8500/demo/devops-demo-app:<VERSION_TAG>.
+docker build -t mycluster.icp:8500/demo/devops-demo-backend:<VERSION_TAG>.
 ````
 
 ## DEPLOY to Kubernetes
