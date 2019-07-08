@@ -1,0 +1,10 @@
+/target
+/.m2
+/.classpath
+/.project
+/.settings
+/.vscode
+/caches
+/local.properties
+.*.swp
+.DS_Store

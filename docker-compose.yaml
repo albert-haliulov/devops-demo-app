@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+   devops-demo-backend:
+     image: devops-demo-backend:0.1
+     ports:
+       - 9080:9080
+   
+   devops-demo-frontend:
+     image: devops-demo-frontend:0.1
+     ports:
+       - 8080:80
+     depends_on:
+      - devops-demo-backend

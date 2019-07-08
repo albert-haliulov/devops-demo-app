@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to DevOps demo application</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300" >
+ </head>
+<body onload="update()">
+  <div class="main">
+    <img src="images/devops.png" width="30%" height="30%"/>
+    <div class="content">
+      <div id="message">
+        DevOps demo application
+      </div>
+      <div id="info">
+        <table>
+            <tr>
+                <td> 
+                    <table id="podTable"></table>
+                </td>
+                <td>
+                    <table id="nodeTable"></table>
+                </td>
+            </tr>
+    </table>
+    </div>        
+    </div>
+  </div>
+  </body>
+</html>
+<script src="http://code.jquery.com/jquery-2.2.4.js" type="text/javascript"></script>
+<script type="text/javascript">
+  function update() {
+      $.ajax({
+        method: "GET",
+        url : 'http://devops-demo-backend:9080/demo/api/node/properties',
+        dataType: 'json',
+        success : function(data) {
+            var html = "<tr><th>Node:</th></tr>";
+            html +='<tr><td>Architecture: ' + data["os.architecture"] + '</td></tr>';
+            html +='<tr><td>Platform: ' + data["os.name"] + '</td></tr>';
+            html +='<tr><td>Release: ' + data["os.version"] + '</td></tr>';
+            html +='<tr><td>Host: ' + data["os.hostname"] + '</td></tr>';
+            
+            document.getElementById("nodeTable").innerHTML = html;
+  
+        }
+      });
+      $.ajax({
+        method: "GET",
+        url : 'http://devops-demo-backend:9080/demo/api/pod/properties',
+        dataType: 'json',
+        success : function(data) {
+            var html = "<tr><th>Pod:</th></tr>";
+            html +='<tr><td>Name: ' + data["pod.name"] + '</td></tr>';
+            html +='<tr><td>Namespace: ' + data["pod.namespace"] + '</td></tr>';
+            html +='<tr><td>IP: ' + data["pod.ip"] + '</td></tr>';
+            html +='<tr><td>Version: ' + data["pod.version"] + '</td></tr>';
+            html +='<tr><td>Environment: ' + data["pod.environment"] + '</td></tr>';
+
+            document.getElementById("podTable").innerHTML = html;
+
+        }
+    });
+
+    setTimeout(update, 3000);
+  }
+  </script>
