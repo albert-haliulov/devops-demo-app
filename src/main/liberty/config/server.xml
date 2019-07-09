@@ -23,6 +23,7 @@
     </featureManager>
 
     <quickStartSecurity userName="admin" userPassword="admin"/>
+    <mpMetrics authentication="false"/>
        
     <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint" host="*" />
     
