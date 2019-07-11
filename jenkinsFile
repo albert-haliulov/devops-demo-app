@@ -65,7 +65,7 @@ volumes: [ secretVolume( mountPath: '/home/jenkins/.helm' , secretName: 'helmcer
             error("[FAILURE] Failed to publish,")          
         }
         try{
-            deployincluster(registryHost, namespace, appName, imTagId, imNS)
+            deployincluster(registryHost, namespace, appName, imTagId, imNs)
         } catch(exe) {
             echo "${exe}"
             error("[FAILURE] Failed to deploy")
