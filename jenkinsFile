@@ -120,8 +120,8 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
         //echo "getting the current service name"
         //kubectl get ingress -n labs helloapp -o jsonpath="{.spec.rules[*].http.paths[*].backend.serviceName}"
         echo 'deploying using helm'
-        echo "setting image name to ${registryHost}/${inNS}/${appName}" 
-        sh "sed -i 's|IM_URI|${registryHost}/${inNS}/${appName}|g' ./helm/values.yaml" 
+        echo "setting image name to ${registryHost}/${imNS}/${appName}" 
+        sh "sed -i 's|IM_URI|${registryHost}/${imNS}/${appName}|g' ./helm/values.yaml" 
 
         echo "setting image tag to ${imTagId}"
         sh "sed -i 's|IM_TAG|${imTagId}|g' ./helm/values.yaml"
