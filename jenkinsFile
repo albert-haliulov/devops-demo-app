@@ -59,13 +59,13 @@ volumes: [ secretVolume( mountPath: '/home/jenkins/.helm' , secretName: 'helmcer
             error("[FAILURE] Failed to initialize")
         }
         try{
-            //publish( imTagId,  appName,  namespace,  registryHost)
+            publish( imNs, imTagId,  appName,  namespace,  registryHost)
         }catch(exe) {
             echo "${exe}"
             error("[FAILURE] Failed to publish,")          
         }
         try{
-            //deployincluster(registryHost, namespace, appName, imTagId, imNs)
+            deployincluster(registryHost, namespace, appName, imTagId, imNs)
             updateSVC(namespace,  imTagId, appName)
         } catch(exe) {
             echo "${exe}"
@@ -89,13 +89,13 @@ volumes: [ secretVolume( mountPath: '/home/jenkins/.helm' , secretName: 'helmcer
    }
 }
 
-def publish(String imTagId, String appName, String namespace, String registryHost) {
+def publish(String imNs, String imTagId, String appName, String namespace, String registryHost) {
      
      container('docker'){
         def docimg
         stage ('Build') {
                 echo 'Running build automation'
-                imageName = registryHost + "/" + namespace + "/" + appName + ":" + imTagId
+                imageName = registryHost + "/" + imNs + "/" + appName + ":" + imTagId
                 echo "building ${imageName}"
                 docimg = docker.build(imageName)
                 sh "docker images"
