@@ -128,7 +128,7 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
 
         echo "setting app for DEV" 
         //TODO adapt based on info
-        sh "sed -i 's|APP_COLOR|GREEN|g' ./helm/values.yaml"
+        sh "sed -i 's|APP_COLOR|DEV|g' ./helm/values.yaml"
         // sh "sed -i back 's|APP_PORT|${appPort}|g' ./helm/values.yaml"
         container ('kubectl'){
             echo "check that namespace exists"
