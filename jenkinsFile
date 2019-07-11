@@ -50,7 +50,7 @@ volumes: [ secretVolume( mountPath: '/home/jenkins/.helm' , secretName: 'helmcer
                 imTagId = userInput['tag']
                 imNs = userInput['imagens']
 
-                echo "image tag id: ${imTagId} and ns: ${imagens}"
+                echo "image tag id: ${imTagId} and ns: ${imNs}"
 
             }
         }  catch(exe)
