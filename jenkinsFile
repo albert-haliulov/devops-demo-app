@@ -66,6 +66,7 @@ volumes: [ secretVolume( mountPath: '/home/jenkins/.helm' , secretName: 'helmcer
         }
         try{
             deployincluster(registryHost, namespace, appName, imTagId, imNs)
+            updateSVC(namespace,  imTagId, appName)
         } catch(exe) {
             echo "${exe}"
             error("[FAILURE] Failed to deploy")
@@ -149,6 +150,29 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
             echo "installing application with helm: ${appName}-${cleanTag} in namespace ${namespace}"
             sh "helm install --name=${appName}-${cleanTag} --namespace=${namespace} --tls ./helm"
             sh "helm list --tls | grep ${appName}"
+        }
+    }
+}
+
+def updateSVC(String namespace, String imTagId, String appName){
+
+    stage ('updateSVC'){
+
+        container ('kubectl') {
+            echo "initializing service yaml file"   
+
+
+            echo "service in namespace ${namespace}: ${appName}-internal will be updated for version ${imTagId}"
+
+            sh "sed -i 's|APP_NAME|${appName}|g' service.yaml"
+
+            sh "cat ingress.yaml"
+
+            sh "sed -i 's|APPSELECTOR|${appName}-${imTagId}|g' service.yaml"
+            sh "kubectl apply -f service.yaml -n ${namespace}"
+
+            echo "service ${appName}-internal updated"
+            //TODO remove previous deployment
         }
     }
 }
