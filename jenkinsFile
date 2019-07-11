@@ -166,7 +166,7 @@ def updateSVC(String namespace, String imTagId, String appName){
 
             sh "sed -i 's|APP_NAME|${appName}|g' service.yaml"
 
-            sh "cat ingress.yaml"
+            sh "cat service.yaml"
 
             sh "sed -i 's|APPSELECTOR|${appName}-${imTagId}|g' service.yaml"
             sh "kubectl apply -f service.yaml -n ${namespace}"
