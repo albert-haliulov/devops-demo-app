@@ -65,7 +65,7 @@ volumes: [ secretVolume( mountPath: '/home/jenkins/.helm' , secretName: 'helmcer
             error("[FAILURE] Failed to publish,")          
         }
         try{
-            deployincluster(registryHost, namespace, appName, imTagId, imNs)
+            //deployincluster(registryHost, namespace, appName, imTagId, imNs)
             updateSVC(namespace,  imTagId, appName)
         } catch(exe) {
             echo "${exe}"
@@ -168,7 +168,9 @@ def updateSVC(String namespace, String imTagId, String appName){
 
             sh "cat service.yaml"
 
-            sh "sed -i 's|APPSELECTOR|${appName}-${imTagId}|g' service.yaml"
+            def cleanTag = imTagId.replaceAll('\\.','')
+
+            sh "sed -i 's|APPSELECTOR|${appName}-${cleanTag}|g' service.yaml"
             sh "kubectl apply -f service.yaml -n ${namespace}"
 
             echo "service ${appName}-internal updated"
