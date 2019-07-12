@@ -14,9 +14,9 @@ def registryHost = "mycluster.icp:8500";
 
 //namespace where the deployemnt shoudl occurs.
 //namespace should be set when deploying the application
-//def namespace = "demoapp-dev"
+def namespace = "demoapp-dev"
 
-def namespace = "dev"
+//def namespace = "dev"
 
 // ingress name will be set of the application name ?
 def ingressName = "mysampleapp".toLowerCase()
@@ -44,15 +44,16 @@ volumes: [ secretVolume( mountPath: '/home/jenkins/.helm' , secretName: 'helmcer
                 def userInput = input(
                     id: 'userInput', message: "deploying app ${appName}", parameters: [
                     [$class: 'TextParameterDefinition', defaultValue: 'demo', description: 'image namespace', name: 'imagens'],
-                    [$class: 'TextParameterDefinition', defaultValue: '0.4.1', description: 'Image tag', name: 'tag']
+                    [$class: 'TextParameterDefinition', defaultValue: '0.4.1', description: 'Image tag', name: 'tag'],
+                    [$class: 'TextParameterDefinition', defaultValue: 'demoapp-dev', description: 'namespace to deploy', name: 'namespace']
                     ]
                 )
 
-
+                namespace = userInput['namespace']
                 imTagId = userInput['tag']
                 imNs = userInput['imagens']
 
-                echo "image tag id: ${imTagId} and ns: ${imNs}"
+                echo "image tag id: ${imTagId} and ns: ${imNs} will be deployed in ns: ${namespace}"
 
             }
         }  catch(exe)
