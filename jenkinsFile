@@ -92,13 +92,13 @@ volumes: [ secretVolume( mountPath: '/home/jenkins/.helm' , secretName: 'helmcer
 
 def publish(String imNs, String imTagId, String appName, String namespace, String registryHost) {
      
-     container('docker'){
+    stage ('BuildMaven') {
+        container('maven'){
+            sh "mvn clean package"
+        }
+    } 
+    container('docker'){
         def docimg
-       stage ('BuildMaven') {
-           container('maven'){
-               sh "mvn clean package"
-           }
-        } 
         stage ('Build') {
                 echo 'Running build automation'
                 imageName = registryHost + "/" + imNs + "/" + appName + ":" + imTagId
@@ -146,6 +146,9 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
             if (currentNsName == null){
                 echo "creating namespace ${namespace}"
                 sh "kubectl create ns ${namespace}"
+                withCredentials([usernamePassword(credentialsId: 'docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh "kubectl create secret docker-registry sa-registry --docker-server=mycluster.icp:8500 --docker-username=${USERNAME} --docker-password=${PASSWORD} -n ${namespace}"
+                }
                 sh "kubectl create rolebinding -n ${namespace} --clusterrole=ibm-anyuid-clusterrole --group=system:serviceaccounts:${namespace} ibm-anyuid-clusterrole-rolebinding"
             }
         }
