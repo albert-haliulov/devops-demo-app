@@ -18,10 +18,8 @@ spec:
         instance-release: {{ .Release.Name }}
         color: {{ .Values.labels.appcolor}}
     spec:
-    {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      - name: {{ .Values.image.imagePullSecrets}}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
