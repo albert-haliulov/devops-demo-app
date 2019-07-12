@@ -161,12 +161,6 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
             if (!frontendSvc) {
                 sh "kubectl apply -f ./frontend/frontend-deploy.yaml --namespace ${namespace}"
             }
-            def svcNodePort = sh (
-                            script: "kubectl get svc devops-demo-frontend-external -n ${namespace} -o jsonpath='{ .spec.ports[0].nodePort}'",
-                            returnStdout: true
-                        ).trim()
-           
-            echo "application will be available on port: ${svcNodePort}"         
 
         }
         
@@ -201,6 +195,13 @@ def updateSVC(String namespace, String imTagId, String appName){
 
             echo "service ${appName}-internal updated"
             //TODO remove previous deployment
+
+            def svcNodePort = sh (
+                            script: "kubectl get svc devops-demo-frontend-external -n ${namespace} -o jsonpath='{ .spec.ports[0].nodePort}'",
+                            returnStdout: true
+                        ).trim()
+           
+            echo "application will be available on port: ${svcNodePort}"         
         }
     }
 }
