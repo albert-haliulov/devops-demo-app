@@ -14,9 +14,9 @@ def registryHost = "mycluster.icp:8500";
 
 //namespace where the deployemnt shoudl occurs.
 //namespace should be set when deploying the application
-//def namespace = "demoapp-dev"
+def namespace = "demoapp-dev"
 
-def namespace = "dev"
+//def namespace = "dev"
 
 // ingress name will be set of the application name ?
 def ingressName = "mysampleapp".toLowerCase()
