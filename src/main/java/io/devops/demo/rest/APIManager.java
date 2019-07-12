@@ -9,6 +9,8 @@ import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
+import java.util.concurrent.TimeUnit;
+
 @ApplicationScoped
 public class APIManager {
 
@@ -55,5 +57,33 @@ public class APIManager {
        
        return props;
     }
+
+    @Counted(name = "userCheckAccessCount", 
+        absolute = true, 
+        monotonic = true,
+        description = "Number of times the user.check is requested.")
+    @Timed(name = "userCheckRequestTime", 
+        absolute = true,
+        description = "Time needed to check the username.")
+    public Properties checkUser(String userName, String password) {
+        Properties props = new Properties();
+        props.setProperty("username", userName);
+        props.setProperty("password", "not4all");
+
+        String status = "invalid";
+        if (userName != null && !userName.trim().isEmpty()) {
+            status = "valid";
+        } else {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        props.setProperty("status", status);
+
+        return props;
+    }    
+
 
 }
