@@ -14,9 +14,9 @@ def registryHost = "mycluster.icp:8500";
 
 //namespace where the deployemnt shoudl occurs.
 //namespace should be set when deploying the application
-def namespace = "demoapp-dev"
+//def namespace = "demoapp-dev"
 
-//def namespace = "dev"
+def namespace = "dev"
 
 // ingress name will be set of the application name ?
 def ingressName = "mysampleapp".toLowerCase()
@@ -151,6 +151,14 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
                     sh "kubectl create secret docker-registry sa-registry --docker-server=mycluster.icp:8500 --docker-username=${USERNAME} --docker-password=${PASSWORD} -n ${namespace}"
                 }
                 sh "kubectl create rolebinding -n ${namespace} --clusterrole=ibm-anyuid-clusterrole --group=system:serviceaccounts:${namespace} ibm-anyuid-clusterrole-rolebinding"
+            }
+            echo "checking front-end is available"
+            frontendSvc = sh (
+                            script: "kubectl get svc devops-demo-frontend -n ${namespace} | awk '{print \$1}'",
+                            returnStdout: true
+                        ).trim()
+            if (!frontendSvc) {
+                sh "kubectl apply -f ./frontend/frontend-deploy.yaml --namespace ${namespace}"
             }
         }
         
