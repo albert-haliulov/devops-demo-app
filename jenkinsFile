@@ -154,13 +154,20 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
                 sh "kubectl create rolebinding -n ${namespace} --clusterrole=ibm-anyuid-clusterrole --group=system:serviceaccounts:${namespace} ibm-anyuid-clusterrole-rolebinding"
             }
             echo "checking front-end is available"
-            frontendSvc = sh (
+            def frontendSvc = sh (
                             script: "kubectl get svc devops-demo-frontend -n ${namespace} | awk '{print \$1}'",
                             returnStdout: true
                         ).trim()
             if (!frontendSvc) {
                 sh "kubectl apply -f ./frontend/frontend-deploy.yaml --namespace ${namespace}"
             }
+            def svcNodePort = sh (
+                            script: "kubectl get svc devops-demo-frontend-external -n ${namespace} -o jsonpath='{ .spec.ports[0].nodePort}'",
+                            returnStdout: true
+                        ).trim()
+           
+            echo "application will be available on port: ${svcNodePort}"         
+
         }
         
         container('helm'){
