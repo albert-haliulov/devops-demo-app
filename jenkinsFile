@@ -144,7 +144,7 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
                         script: "kubectl get ns | grep ${namespace} | awk '{print \$1}'",
                         returnStdout: true
                     ).trim()
-            if (currentNsName == null){
+            if (!currentNsName){
                 echo "creating namespace ${namespace}"
                 sh "kubectl create ns ${namespace}"
                 withCredentials([usernamePassword(credentialsId: 'docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
