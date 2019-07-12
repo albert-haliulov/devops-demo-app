@@ -21,6 +21,7 @@ def namespace = "demoapp-dev"
 def ingressName = "mysampleapp".toLowerCase()
 
 podTemplate(label: label, cloud: 'ICP', containers: [
+  containerTemplate(name: 'maven' , image: 'maven:3-alpine', ttyEnabled: true, command: 'cat'),
   containerTemplate(name: 'docker' , image: 'docker:18.06.2-ce', ttyEnabled: true, command: 'cat'),
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.12.3', command: 'cat', ttyEnabled: true)
@@ -93,6 +94,11 @@ def publish(String imNs, String imTagId, String appName, String namespace, Strin
      
      container('docker'){
         def docimg
+       stage ('BuildMaven') {
+           container('maven'){
+               sh "mvn clean package"
+           }
+        } 
         stage ('Build') {
                 echo 'Running build automation'
                 imageName = registryHost + "/" + imNs + "/" + appName + ":" + imTagId
