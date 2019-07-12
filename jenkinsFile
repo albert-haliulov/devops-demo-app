@@ -141,7 +141,7 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
         container ('kubectl'){
             echo "check that namespace exists"
             currentNsName = sh (
-                        script: "kubectl get ns | grep ${namespace} | awk '{print \$1}'",
+                        script: "kubectl get ns | grep '^${namespace}' | awk '{print \$1}'",
                         returnStdout: true
                     ).trim()
             if (!currentNsName){
