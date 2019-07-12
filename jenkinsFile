@@ -157,8 +157,8 @@ def deployincluster(String registryHost, String namespace, String appName, Strin
         container('helm'){
             sh "cat ./helm/values.yaml"
             def cleanTag = imTagId.replaceAll('\\.','')
-            echo "installing application with helm: ${appName}-${cleanTag} in namespace ${namespace}"
-            sh "helm install --name=${appName}-${cleanTag} --namespace=${namespace} --tls ./helm"
+            echo "installing application with helm: ${appName}-${cleanTag}-${namespace} in namespace ${namespace}"
+            sh "helm install --name=${appName}-${cleanTag}-${namespace} --namespace=${namespace} --tls ./helm"
             sh "helm list --tls | grep ${appName}"
         }
     }
@@ -180,7 +180,7 @@ def updateSVC(String namespace, String imTagId, String appName){
 
             def cleanTag = imTagId.replaceAll('\\.','')
 
-            sh "sed -i 's|APPSELECTOR|${appName}-${cleanTag}|g' service.yaml"
+            sh "sed -i 's|APPSELECTOR|${appName}-${imTagId}|g' service.yaml"
             sh "kubectl apply -f service.yaml -n ${namespace}"
 
             echo "service ${appName}-internal updated"
