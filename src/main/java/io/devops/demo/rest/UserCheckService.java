@@ -12,17 +12,24 @@ import javax.ws.rs.core.MediaType;
 
 
 @RequestScoped
-@Path("user")
+@Path("/user")
 public class UserCheckService {
 
     @Inject
     APIManager manager;
 
     @GET
-    @Path("check")
+    @Path("/v2/check")
     @Produces(MediaType.APPLICATION_JSON)
     public Properties checkUser(@QueryParam("username") String userName, @QueryParam("password") String password) {
         return manager.checkUser(userName, password);
+    }
+
+    @GET
+    @Path("/v3/check")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Properties checkUserFast(@QueryParam("username") String userName, @QueryParam("password") String password) {
+        return manager.checkUserFast(userName, password);
     }
 
 }

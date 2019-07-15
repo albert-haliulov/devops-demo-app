@@ -3,6 +3,7 @@ package io.devops.demo.rest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
+import java.util.Random;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -61,29 +62,54 @@ public class APIManager {
     @Counted(name = "userCheckAccessCount", 
         absolute = true, 
         monotonic = true,
-        description = "Number of times the user.check is requested.")
+        description = "Number of times the checkUser is requested.")
     @Timed(name = "userCheckRequestTime", 
         absolute = true,
-        description = "Time needed to check the username.")
+        description = "Time needed to operate checkUser.")
     public Properties checkUser(String userName, String password) {
         Properties props = new Properties();
-        props.setProperty("username", userName);
-        props.setProperty("password", "not4all");
-
-        String status = "invalid";
-        if (userName != null && !userName.trim().isEmpty()) {
-            status = "valid";
-        } else {
-            try {
-                TimeUnit.SECONDS.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        props.setProperty("status", status);
-
+        props.setProperty("status", checkUserByExternal(userName, password) ? "valid" : "invalid");
         return props;
-    }    
+    }
+    
+    
+    @Counted(name = "userCheckFastAccessCount", 
+        absolute = true, 
+        monotonic = true,
+        description = "Number of times the useCheckFast is requested.")
+    @Timed(name = "userCheckFastRequestTime", 
+        absolute = true,
+        description = "Time needed to operate userCheckFast.")
+    public Properties checkUserFast(String userName, String password) {
+        Properties props = new Properties();
+        props.setProperty("status", checkUserByCache(userName, password) ? "valid" : "invalid");
+        return props;
+    } 
+
+    private boolean checkUserByExternal(String userName, String password){
+        boolean check = false;
+        try {
+            // this artificial delay in order to demosntrate slow response from enterprise system 
+            Thread.sleep((long)(Math.random() * 1000));
+            if(userName != null && !userName.trim().isEmpty() &&
+                password !=null && !password.trim().isEmpty()){
+                    check = true;
+                }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return check;
+    }
+
+    private boolean checkUserByCache(String userName, String password){
+        boolean check = false; 
+        // here need to put some caching functionality
+        if(userName != null && !userName.trim().isEmpty() &&
+           password !=null && !password.trim().isEmpty()){
+                check = true;
+        }
+        return check;
+    }
 
 
 }
