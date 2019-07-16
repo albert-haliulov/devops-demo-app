@@ -89,13 +89,15 @@ public class APIManager {
     private boolean checkUserByExternal(String userName, String password){
         boolean check = false;
         try {
-            // this artificial delay in order to demosntrate slow response from enterprise system
-            int delay = (int)(3 * Math.random() + 1); 
-            Thread.sleep((long)(delay * 1000));
             if(userName != null && !userName.trim().isEmpty() &&
                 password !=null && !password.trim().isEmpty()){
                     check = true;
-                }
+            }else{
+                // this artificial delay in order to demosntrate slow response from enterprise system
+                int delay = (int)(3 * Math.random() + 1); 
+                Thread.sleep((long)(delay * 1000));
+            }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
